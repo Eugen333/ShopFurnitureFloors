@@ -1,0 +1,40 @@
+{% extends 'shop/base.html' %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>{{ product.name }}</title>
+</head>
+<body>
+    {% block content %}
+        <h1>{{ product.name }}</h1>
+        <p>Ціна: {{ product.price }} грн.</p>
+        <p>Опис: {{ product.description }}</p>
+        <p>Категорія: {{ product.category }}</p>
+        <p>Залишок: {{ product.stock }}</p>
+
+        <h2>Замовлення з цим продуктом:</h2>
+        {% for order in product.order_set.all %}
+            <p>Номер замовлення: {{ order.id }}</p>
+            <p>Ім'я клієнта: {{ order.customer_name }}</p>
+            <p>Адреса доставки: {{ order.address }}</p>
+            <p>Загальна вартість: {{ order.total_price }} грн.</p>
+            <p>Дата створення: {{ order.date_created }}</p>
+            <hr>
+        {% empty %}
+            <p>Цей продукт не має замовлень.</p>
+        {% endfor %}
+
+        <h2>Замовити продукт:</h2>
+        <form action="{% url 'shop:order' pk=product.pk %}" method="post">
+            {% csrf_token %}
+            <label for="customer_name">Ім'я:</label>
+            <input type="text" name="customer_name" id="customer_name" required><br><br>
+            <label for="address">Адреса:</label>
+            <input type="text" name="address" id="address" required><br><br>
+            <label for="quantity">Кількість:</label>
+            <input type="number" name="quantity" id="quantity" min="1" required><br><br>
+            <input type="submit" value="Замовити">
+        </form>
+    {% endblock %}
+</body>
+</html>

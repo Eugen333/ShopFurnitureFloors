@@ -1,0 +1,16 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <h2>Список товарів</h2>
+    <ul>
+        {% for product in products %}
+            <li>
+                <a href="{% url 'shop:product-detail' product.pk %}">
+                    {{ product.name }} - {% if products_currency == 'usd' %}${{ product.price }}{% else %}{{ product.price }} грн.{% endif %}
+                </a>
+            </li>
+        {% empty %}
+            <li>Немає доступних товарів</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

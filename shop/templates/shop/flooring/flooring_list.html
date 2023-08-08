@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Список підлог</title>
+</head>
+<body>
+    <h1>Список підлог</h1>
+    <ul>
+        {% for flooring in floorings %}
+            <li><a href="{% url 'shop:flooring_detail' pk=flooring.pk %}">{{ flooring.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
