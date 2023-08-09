@@ -1,20 +1,15 @@
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from users.forms import CustomerUserCreationForm
-from django.contrib.auth import authenticate, login
-from django.core.mail import EmailMessage
+from django.contrib.auth import login
+from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-# from django.contrib.auth.urls import urlpatterns
 from django.contrib.auth.views import (LoginView, PasswordChangeView, PasswordChangeDoneView,
                                        PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView,
                                        PasswordResetConfirmView)
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 
 @login_required
 def profile_view(request, username):
@@ -41,7 +36,7 @@ def dashboard(request):
     return render(request, "users/dashboard.html")
 
 
-def register(request):
+def register(request: HttpRequest):
     if request.method == "GET":
         return render(
             request,
@@ -63,47 +58,36 @@ def email_register(request):
         return render(
             request,
             "users/register.html",
-            {"form": EmailUserCreationForm}
+            {"form": CustomerUserCreationForm}
         )
     elif request.method == "POST":
-        form = EmailUserCreationForm(request.POST)
+        form = CustomerUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'  # Указываем бэкенд
             login(request, user)
-            send_thank_you_email(user)  # Отправка письма благодарности
+            send_thank_you_email(user, language='uk')  # Отправка письма благодарности
             return redirect(reverse("users:dashboard"))
 
-
-
-def send_thank_you_email(user):
+# ___________________________________________________________________________
+# ______________________________________________________________________________________________ Удалить
+def send_thank_you_email(user: User, language='uk') -> None:
     subject = "Registration Confirmation"
-    message = f"Dear {user.get_full_name()},\n\nДякуємо за реєстрацію на нашому сайті."
+    if language == 'en':
+                message = f"Dear {user.get_full_name()},\n\nThank you for registering on our website."
+    else:
+        message = f"Dear {user.get_full_name()},\n\nДякуємо за реєстрацію на нашому сайті."
+
     from_email = settings.EMAIL_HOST_USER
     recipient_list = [user.email]
 
-    email = EmailMessage(subject, message, from_email, recipient_list)
-
     try:
-        email.send()
+        send_mail(subject, message, from_email, recipient_list)
         print("Thank you email sent successfully!")
     except Exception as e:
         print("Failed to send thank you email:", str(e))
 
-
-# def register(request: HttpRequest):
-#     if request.method == "GET":
-#         return render(
-#             request,
-#             "users/register.html",
-#             {"form": CustomerUserCreationForm}
-#         )
-#     elif request.method == "POST":
-#         form = CustomerUserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect(reverse("users:dashboard"))
+# ----------------------------------------
 
 
 class MyLoginView(LoginView):
@@ -137,20 +121,3 @@ class MyPasswordResetConfirmView(PasswordResetConfirmView):
 
 class MyPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = "registration/my_password_reset_complete.html"
-
-
-def register(request: HttpRequest):
-    if request.method == "POST":
-        form = CustomerUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect(reverse("users:dashboard"))
-    else:
-        form = CustomerUserCreationForm()  # Создание пустой формы для GET-запроса
-
-    return render(
-        request,
-        "users/register.html",
-        {"form": form}
-    )

@@ -3,35 +3,36 @@ from django.contrib.auth.models import User
 
 User.add_to_class('address', models.CharField(max_length=255, blank=True, null=True))
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
+# class Category(models.Model):
+#     name = models.CharField(max_length=100)
+#
+#     def __str__(self):
+#         return self.name
 
 class Furniture(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(null=True)
+    image = models.ImageField(upload_to='shop/images/furniture/')
+    dimensions = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
+
 class Flooring(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(null=True)
+    image = models.ImageField(upload_to='shop/images/flooring/')
+    dimensions = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(null=True)
+    image = models.ImageField(upload_to='shop/images/flooring/')
+    dimensions = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

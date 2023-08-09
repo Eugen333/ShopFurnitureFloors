@@ -117,7 +117,8 @@ def order_success(request):
 
 def furniture_view(request):
     furniture = Furniture.objects.all()  # Отримуємо всі об'єкти моделі Furniture
-    return render(request, 'shop/furniture/furniture.html', {'furniture': furniture})
+    context = {'furniture': furniture}  # Передаем их в контекст
+    return render(request, 'shop/furniture/furniture.html', context)
 
 
 def home_view(request):

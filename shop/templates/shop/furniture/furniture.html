@@ -11,18 +11,17 @@
 
     <!-- Банер меблів -->
     <div class="furniture-header">
-        <img class="furniture-banner-image" src="{% static 'shop/images/furniture-banner.jpg' %}" alt="Furniture">
+        <img class="furniture-banner-image" src="{% static 'shop/images/furniture/furniture-banner.jpg' %}" alt="Furniture">
     </div>
 
-    <!-- Зображення меблів з описом та посиланням на сторінку заказу -->
+    <!-- Зображення меблів з названням та посиланням на сторінку заказу -->
     <div class="furniture-items">
         {% for product in furniture %}
-            {% with image_url=product.pk|stringformat:"shop/images/furniture_{}.jpg" %}
+            {% with image_url=product.pk|stringformat:"shop/images/furniture/furniture_{}.jpg" %}
                 <div class="furniture-item">
                     <a href="{% url 'shop:furniture_detail' pk=product.pk %}">
                         <img src="{% static image_url %}" alt="{{ product.name }}">
                         <p>{{ product.name }}</p>
-                        <p>{{ product.description }}</p>
                     </a>
                 </div>
             {% endwith %}

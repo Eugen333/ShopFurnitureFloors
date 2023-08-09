@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-wc)@(c+ra))f!@cwv=4_b#p%o_g!h+4(d^661sizowp_f^b%ew
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -132,6 +132,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -149,5 +151,5 @@ EMAIL_PORT = 465  # Порт SMTP сервера
 EMAIL_USE_TLS = False  # Использовать TLS для безопасного соединения
 EMAIL_USE_SSL = True
 
-EMAIL_HOST_USER = 'eugen4879@ukr.net'  # Ваш email
-EMAIL_HOST_PASSWORD = 'jWlzE8Uy7udrCXhM'  # Пароль от вашего email
+EMAIL_HOST_USER = 'eugen4879@ukr.net'  # email відравника
+EMAIL_HOST_PASSWORD = 'Qi7xqtqqA80gEW5F'  # Пароль от email відравника
