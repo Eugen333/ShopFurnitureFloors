@@ -6,12 +6,12 @@ from django.contrib.auth.models import User
 class FlooringForm(forms.ModelForm):
     class Meta:
         model = Flooring
-        fields = ['name', 'description', 'price', 'category']
+        fields = ['name', 'image', 'dimensions', 'price']
 
 class FurnitureForm(forms.ModelForm):
     class Meta:
         model = Furniture
-        fields = ['name', 'description', 'price', 'category']
+        fields = ['name', 'image', 'dimensions', 'price']
 
 class UserForm(forms.ModelForm):
     class Meta:

@@ -153,3 +153,5 @@ EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = 'eugen4879@ukr.net'  # email відравника
 EMAIL_HOST_PASSWORD = 'Qi7xqtqqA80gEW5F'  # Пароль от email відравника
+
+AUTH_USER_MODEL = 'users.CustomUser'

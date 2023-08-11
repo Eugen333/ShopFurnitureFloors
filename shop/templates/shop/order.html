@@ -8,7 +8,7 @@
 
     {% block content %}
         <h1>Замовити продукт</h1>
-        <form action="{% url 'shop:order_view' pk=product.pk %}" method="post">
+        <form action="{% url 'shop:order_furniture' pk=product.pk %}" method="post">
             {% csrf_token %}
             <label for="customer_name">Ім'я:</label>
             <input type="text" name="customer_name" id="customer_name" required><br><br>

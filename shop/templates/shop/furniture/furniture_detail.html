@@ -8,7 +8,6 @@
     {% block content %}
         <h1>{{ product.name }}</h1>
         <p>Ціна: {{ product.price }} грн.</p>
-        <p>Опис: {{ product.description }}</p>
         <p>Категорія: {{ product.category }}</p>
         <p>Залишок: {{ product.stock }}</p>
 
@@ -25,7 +24,7 @@
         {% endfor %}
 
         <h2>Замовити продукт:</h2>
-        <form action="{% url 'shop:order' pk=product.pk %}" method="post">
+        <form action="{% url 'shop:order_product' product_type='furniture' pk=product.pk %}" method="post">
             {% csrf_token %}
             <label for="customer_name">Ім'я:</label>
             <input type="text" name="customer_name" id="customer_name" required><br><br>

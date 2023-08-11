@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
-from django.http import HttpRequest
 from users.forms import CustomerUserCreationForm
 from django.contrib.auth import login
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from .models import CustomUser
+from users.models_profile import UserProfile
 from django.contrib.auth.views import (LoginView, PasswordChangeView, PasswordChangeDoneView,
                                        PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView,
                                        PasswordResetConfirmView)
@@ -14,17 +15,18 @@ from django.contrib.auth.views import (LoginView, PasswordChangeView, PasswordCh
 @login_required
 def profile_view(request, username):
     try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
+        user = CustomUser.objects.get(username=username)
+    except CustomUser.DoesNotExist:
         # Обработка случая, если пользователь с указанным именем не найден
         return render(request, 'users/profile_not_found.html')
 
     # Логика для отображения информации о пользователе
     # Например, если у пользователя есть дополнительные поля профиля:
-    profile = user.profile  # Предположим, что у пользователя есть связанный профиль
+    profile = user.userprofile  # Предположим, что у пользователя есть связанный профиль
     context = {'user': user, 'profile': profile}
 
     return render(request, 'users/profile.html', context)
+
 
 
 @login_required
@@ -36,45 +38,40 @@ def dashboard(request):
     return render(request, "users/dashboard.html")
 
 
-def register(request: HttpRequest):
-    if request.method == "GET":
-        return render(
-            request,
-            "users/register.html",
-            {"form": CustomerUserCreationForm}
-        )
-    elif request.method == "POST":
+def register(request):
+    if request.method == "POST":
         form = CustomerUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Указываем бэкенд
+            # Сохраняем пользователя
+            user = form.save(commit=False)
+            user.email = form.cleaned_data['email']
+            user.save()
+
+            # Создаем профиль и сохраняем
+            profile = UserProfile.objects.create(user=user, customer_name=form.cleaned_data['customer_name'], address=form.cleaned_data['address'])
+
+            # Отправляем письмо благодарности
+            send_thank_you_email(user)
+
+            # Авторизуем пользователя после регистрации
             login(request, user)
-            send_thank_you_email(user)  # Отправка письма благодарности
+
+            # Перенаправляем на страницу после успешной регистрации
             return redirect(reverse("users:dashboard"))
+        else:
+            # Форма не валидна, показываем ошибки
+            messages.error(request, 'Ошибка при регистрации. Пожалуйста, проверьте введенные данные.')
+            return render(request, "users/register.html", {"form": form})
+    else:
+        # GET запрос - показываем пустую форму
+        form = CustomerUserCreationForm()
+        return render(request, "users/register.html", {"form": form})
 
 
-def email_register(request):
-    if request.method == "GET":
-        return render(
-            request,
-            "users/register.html",
-            {"form": CustomerUserCreationForm}
-        )
-    elif request.method == "POST":
-        form = CustomerUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Указываем бэкенд
-            login(request, user)
-            send_thank_you_email(user, language='uk')  # Отправка письма благодарности
-            return redirect(reverse("users:dashboard"))
-
-# ___________________________________________________________________________
-# ______________________________________________________________________________________________ Удалить
-def send_thank_you_email(user: User, language='uk') -> None:
+def send_thank_you_email(user, language='uk'):
     subject = "Registration Confirmation"
     if language == 'en':
-                message = f"Dear {user.get_full_name()},\n\nThank you for registering on our website."
+        message = f"Dear {user.get_full_name()},\n\nThank you for registering on our website."
     else:
         message = f"Dear {user.get_full_name()},\n\nДякуємо за реєстрацію на нашому сайті."
 

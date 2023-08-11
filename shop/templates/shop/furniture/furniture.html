@@ -2,11 +2,6 @@
 {% load static %}
 
 {% block content %}
-    <style>
-        :root {
-            --slide-image: url("{% static 'shop/images/slide_1_1600.jpg' %}");
-        }
-    </style>
     <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
 
     <!-- Банер меблів -->
@@ -17,14 +12,14 @@
     <!-- Зображення меблів з названням та посиланням на сторінку заказу -->
     <div class="furniture-items">
         {% for product in furniture %}
-            {% with image_url=product.pk|stringformat:"shop/images/furniture/furniture_{}.jpg" %}
+            <a class="product-link" href="{% url 'shop:order_furniture' pk=product.pk %}">
                 <div class="furniture-item">
-                    <a href="{% url 'shop:furniture_detail' pk=product.pk %}">
-                        <img src="{% static image_url %}" alt="{{ product.name }}">
-                        <p>{{ product.name }}</p>
-                    </a>
+                    <img class="product-image" src="{% static 'shop/images/furniture/furniture_' %}{{ product.pk }}.jpg" alt="{{ product.name }}">
+                    <p class="product-name">{{ product.name }}</p>
+                    <p class="product-dimensions">Dimensions: {{ product.dimensions }}</p>
+                    <p class="product-price">Price: {{ product.price }}</p>
                 </div>
-            {% endwith %}
+            </a>
         {% endfor %}
     </div>
 {% endblock %}

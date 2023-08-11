@@ -1,0 +1,27 @@
+/* static/shop/css/product-details.css */
+
+.furniture-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.furniture-item {
+    display: flex;
+    align-items: center;
+}
+
+.product-image {
+    max-width: 200px;
+    margin-right: 10px;
+}

@@ -3,17 +3,14 @@ from django.contrib.auth.models import User
 
 User.add_to_class('address', models.CharField(max_length=255, blank=True, null=True))
 
-# class Category(models.Model):
-#     name = models.CharField(max_length=100)
-#
-#     def __str__(self):
-#         return self.name
 
 class Furniture(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='shop/images/furniture/')
     dimensions = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    initial_stock = models.PositiveIntegerField(default=0)  # Начальный остаток
+    current_stock = models.PositiveIntegerField(default=0)  # Текущий остаток
 
     def __str__(self):
         return self.name
@@ -24,6 +21,8 @@ class Flooring(models.Model):
     image = models.ImageField(upload_to='shop/images/flooring/')
     dimensions = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    initial_stock = models.PositiveIntegerField(default=0)  # Начальный остаток
+    current_stock = models.PositiveIntegerField(default=0)  # Текущий остаток
 
     def __str__(self):
         return self.name

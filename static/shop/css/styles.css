@@ -109,3 +109,36 @@ h1.header-title {
     border-radius: 5px;
     cursor: pointer;
 }
+/* ... остальные стили ... */
+
+.furniture-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Изменено */
+}
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+    width: calc(33.33% - 20px);
+    margin: 10px;
+}
+
+.furniture-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+}
+
+.product-image {
+    max-width: 100%;
+}
+
+.product-name,
+.product-dimensions,
+.product-price {
+    text-align: center;
+    margin: 5px;
+}
