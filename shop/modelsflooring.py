@@ -1,8 +1,10 @@
+# shop/modelsflooring.py
+
 from django.db import models
 
 class Flooring(models.Model):
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='shop/images/furniture/')
+    image = models.ImageField(upload_to='shop/images/flooring/')
     dimensions = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     initial_stock = models.PositiveIntegerField(default=0)  # Начальный остаток

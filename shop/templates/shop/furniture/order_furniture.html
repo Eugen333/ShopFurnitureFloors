@@ -1,0 +1,17 @@
+<!-- ShopFurnitureFloors\shop\templates\shop\furniture\order_furniture.html -->
+
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <h4>Оформлення замовлення</h4>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Підтвердити замовлення</button>
+        </form>
+        {% if error_message %}
+            <p>{{ error_message }}</p>
+        {% endif %}
+    </div>
+{% endblock content %}

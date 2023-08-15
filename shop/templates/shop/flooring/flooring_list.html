@@ -1,14 +1,82 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <title>Список підлог</title>
-</head>
-<body>
-    <h1>Список підлог</h1>
-    <ul>
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .flooring-header {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .flooring-banner-image {
+            width: 100%;
+            height: auto;
+        }
+
+        .flooring-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .product {
+            width: calc(25% - 20px);
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .product-image {
+            max-width: 60%;
+            height: auto;
+        }
+
+        .product-link {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid rgb(204, 204, 204);
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .product-link:hover {
+            background-color: #ccc;
+            color: #007bff;
+        }
+
+        .order-button {
+            background-color: #007bff;
+        }
+
+        .register-button {
+            background-color: #f0ad4e;
+        }
+    </style>
+
+    <!-- Банер підлог -->
+    <div class="flooring-header">
+        <img class="flooring-banner-image" src="{% static 'shop/images/flooring/flooring-banner.jpg' %}" alt="Flooring">
+    </div>
+
+    <!-- Зображення підлог з названням та посиланням на сторінку деталей -->
+    <div class="flooring-items">
         {% for flooring in floorings %}
-            <li><a href="{% url 'shop:flooring_detail' pk=flooring.pk %}">{{ flooring.name }}</a></li>
+            <div class="product">
+                <img class="product-image" src="{% static 'shop/images/flooring/flooring_' %}{{ flooring.pk }}.jpg" alt="{{ flooring.name }}">
+                <h2>{{ flooring.name }}</h2>
+                <img src="{{ flooring.image.url }}" alt="{{ flooring.name }}">
+                <p>Ціна: {{ flooring.price }}</p>
+                <p>Розміри: {{ flooring.dimensions }}</p>
+                <p>Залишок на складі: {{ flooring.current_stock }}</p>
+                <a class="product-link {% if user.is_authenticated %}order-button{% else %}register-button{% endif %}" href="{% if user.is_authenticated %}{% url 'shop:order' product_type='flooring' pk=flooring.pk %}{% else %}{% url 'users:register' %}{% endif %}">
+                    Замовити
+                </a>
+            </div>
         {% endfor %}
-    </ul>
-</body>
-</html>
+    </div>
+{% endblock %}

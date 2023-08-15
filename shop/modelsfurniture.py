@@ -1,3 +1,4 @@
+# shop/modelsfurniture.py
 from django.db import models
 
 class Furniture(models.Model):

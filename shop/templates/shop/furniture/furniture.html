@@ -1,25 +1,67 @@
+<!-- shop/furniture.html -->
+
 {% extends 'shop/base.html' %}
 {% load static %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+    <style>
+    /* Стили для кнопки Замовити */
+        .product-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: {% if user.is_authenticated %}gray{% else %}transparent{% endif %};
+            border: 2px solid gray;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            color: {% if user.is_authenticated %}white{% else %}gray{% endif %};
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .product-link:hover {
+            background-color: gray;
+            color: white;
+        }
+
+        .product-link:hover {
+            background-color: gray;
+            color: white;
+        }
+
+        .button-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Чтобы текст центрировался вертикально */
+        }
+    </style>
+
+    <link rel="stylesheet" href="{% static 'shop/furniture/css/furniture_styles.css' %}">
 
     <!-- Банер меблів -->
     <div class="furniture-header">
-        <img class="furniture-banner-image" src="{% static 'shop/images/furniture/furniture-banner.jpg' %}" alt="Furniture">
+        <img class="furniture-banner-image" src="{% static '/shop/images/furniture/furniture-banner.jpg' %}" alt="Furniture">
     </div>
 
     <!-- Зображення меблів з названням та посиланням на сторінку заказу -->
     <div class="furniture-items">
         {% for product in furniture %}
-            <a class="product-link" href="{% url 'shop:order_furniture' pk=product.pk %}">
-                <div class="furniture-item">
-                    <img class="product-image" src="{% static 'shop/images/furniture/furniture_' %}{{ product.pk }}.jpg" alt="{{ product.name }}">
-                    <p class="product-name">{{ product.name }}</p>
-                    <p class="product-dimensions">Dimensions: {{ product.dimensions }}</p>
-                    <p class="product-price">Price: {{ product.price }}</p>
-                </div>
-            </a>
+            <div class="furniture-item">
+                <img class="product-image" src="{% static 'shop/images/furniture/furniture_' %}{{ product.pk }}.jpg" alt="{{ product.name }}">
+                <p class="product-name">{{ product.name }}</p>
+                <p class="product-dimensions">Dimensions: {{ product.dimensions }}</p>
+                <p class="product-price">Price: {{ product.price }}</p>
+                <a class="product-link {% if user.is_authenticated %}order-button{% else %}register-button{% endif %}"
+                   href="{% if user.is_authenticated %}
+                         {% url 'shop:order' product_type='furniture' pk=product.pk %}
+                       {% else %}
+                         {% url 'users:register' %}
+                       {% endif %}">
+                    <span class="button-text">Замовити</span>
+                </a>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

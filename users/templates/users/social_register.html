@@ -1,0 +1,9 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <h2>Social Registration</h2>
+    <a href="{% url 'social:begin' 'github' %}">Register with GitHub</a>
+    <a href="{% url 'social:begin' 'google' %}">Register with Google</a>
+    <a href="{% url 'social:begin' 'facebook' %}">Register with Facebook</a>
+    <a href="{% url 'social:begin' 'twitter' %}">Register with Twitter</a>
+{% endblock %}

@@ -1,0 +1,144 @@
+/* styles.css */
+
+body {
+    background-color: white;
+    margin: 0;
+}
+
+h1.header-title {
+    color: blue;
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: var(--slide-image);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.links-above-image {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.links-above-image a {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    margin: 0 10px;
+    color: saddlebrown;
+    text-decoration: none;
+}
+
+.links-above-image img {
+    margin-right: 5px;
+}
+
+.text-below-image {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.text-below-image h2 {
+    font-size: 32px;
+    color: blue;
+    margin-bottom: 20px;
+}
+
+.text-below-image p {
+    font-size: 24px;
+    color: blue;
+    margin: 0 20px;
+}
+
+.links-below-image {
+    display: none;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px; /* Змініть висоту залежно від вашого бажаного розміру */
+    background-color: yellow; /* Фоновий колір (жовтий) */
+}
+
+.round-link {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    margin: 0 10px;
+    color: saddlebrown;
+    text-decoration: none;
+}
+
+.round-image {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.top-bar {
+    font-size: 24px;
+    color: blue;
+    margin-left: 20px;
+}
+
+.header {
+    background-color: yellow; /* Фоновий колір (жовтий) */
+    padding: 20px; /* Додайти відступи зверху та знизу для кращого вигляду */
+}
+
+.header-title {
+    font-size: 32px;
+    color: blue;
+    margin: 0; /* Забрати зовнішні відступи, які бралися зі стандартного вигляду <h1> */
+}
+.login-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* ... остальные стили ... */
+
+.furniture-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Изменено */
+}
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+    width: calc(33.33% - 20px);
+    margin: 10px;
+}
+
+.furniture-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+}
+
+.product-image {
+    max-width: 100%;
+}
+
+.product-name,
+.product-dimensions,
+.product-price {
+    text-align: center;
+    margin: 5px;
+}

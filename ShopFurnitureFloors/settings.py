@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from django.template.context_processors import media
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,8 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+
+STATICFILES_DIR = os.getenv('STATICFILES_DIR', 'static')
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wc)@(c+ra))f!@cwv=4_b#p%o_g!h+4(d^661sizowp_f^b%ew'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,11 +85,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ShopFurnitureFloors.wsgi.application'
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'social_core.backends.github.GithubOAuth2',
-]
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -95,6 +96,9 @@ DATABASES = {
     }
 }
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -131,7 +135,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),
+                    os.path.join(BASE_DIR, 'shop'),
+                    ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
 
 
@@ -140,8 +146,28 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SOCIAL_AUTH_GITHUB_KEY = '2a87560dd26018f96744'
-SOCIAL_AUTH_GITHUB_SECRET = '4e5b168c1c595429e95c3abcece42e57b8ea6e08'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+]
+
+SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
+# настройкa для Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/complete/google-oauth2/'  # Для локальной разработки
+# Пример настройки для Facebook
+# SOCIAL_AUTH_FACEBOOK_KEY = 'Ваш_Facebook_app_id'
+# SOCIAL_AUTH_FACEBOOK_SECRET = 'Ваш_Facebook_app_secret'
+
+# Пример настройки для Twitter
+# SOCIAL_AUTH_TWITTER_KEY = 'Ваш_Twitter_consumer_key'
+# SOCIAL_AUTH_TWITTER_SECRET = 'Ваш_Twitter_consumer_secret'
 LOGIN_REDIRECT_URL = 'users:dashboard'
 
 # Email settings
@@ -154,4 +180,4 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'eugen4879@ukr.net'  # email відравника
 EMAIL_HOST_PASSWORD = 'Qi7xqtqqA80gEW5F'  # Пароль от email відравника
 
-AUTH_USER_MODEL = 'users.CustomUser'
+

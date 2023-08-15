@@ -1,0 +1,11 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <h2>Social Profile</h2>
+    {% if social_data %}
+        <p>GitHub Username: {{ social_data.username }}</p>
+        <!-- Добавить другие поля для других социальных платформ, если получится -->
+    {% else %}
+        <p>No social data available.</p>
+    {% endif %}
+{% endblock %}

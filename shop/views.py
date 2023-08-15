@@ -1,214 +1,131 @@
-
+# shop/views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, TemplateView
-from .models import Furniture, Order, OrderItem
+from django.views.generic import ListView, DetailView, TemplateView, FormView
+from .models import Furniture, Flooring, Order, OrderItem, Product
 from .forms import UserForm, OrderForm
-from .models import Flooring
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+import logging
 
+# Оставим описания классов представлений сначала
 class HomeView(TemplateView):
     template_name = 'shop/home.html'
-
 
 class FurnitureListView(ListView):
     model = Furniture
     template_name = 'shop/furniture/furniture.html'
     context_object_name = 'furniture'
 
-    def post(self, request, *args, **kwargs):
-        # Отримати дані з POST-запиту
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user_form = form.save(commit=False)
-            user_form.save()
-
-            # Отримати дані з форми
-            customer_name = user_form.first_name
-            email = user_form.email
-            address = user_form.address
-            quantity = form.cleaned_data['quantity']
-
-            # Отримати об'єкт меблів з контексту ListView (self.object_list)
-            furniture = self.object_list.get(pk=self.kwargs['pk'])
-
-            total_price = furniture.price * quantity
-
-            # Перевіряємо, чи достатньо товару на складі
-            if furniture.current_stock >= quantity:
-                order = Order.objects.create(
-                    customer_name=customer_name,
-                    email=email,
-                    address=address,
-                    total_price=total_price
-                )
-                OrderItem.objects.create(
-                    order=order,
-                    product=furniture,
-                    quantity=quantity
-                )
-
-                # Зменшуємо кількість товару на складі відповідно до кількості замовленого
-                furniture.current_stock -= quantity
-                furniture.save()
-
-                # Перенаправляємо користувача на сторінку успішного замовлення
-                return render(request, 'shop/order_success.html')
-            else:
-                # Якщо товару не вистачає на складі, показуємо повідомлення про помилку
-                error_message = "На жаль, недостатньо товару на складі."
-                return render(request, 'shop/order.html',
-                              {'form': form, 'product': furniture, 'error_message': error_message})
-        else:
-            # Якщо дані форми недійсні, відображаємо помилку
-            messages.error(request, "Invalid form data")
-            return self.get(request, *args, **kwargs)
-
+# Представление для деталей мебели
 class FurnitureDetailView(DetailView):
     model = Furniture
     template_name = 'shop/furniture/furniture_detail.html'
     context_object_name = 'furniture'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = OrderForm()  # Використовуємо OrderForm для замовлення
-        return context
-
-
+# Представление для списка полов
 class FlooringListView(ListView):
     model = Flooring
     template_name = 'shop/flooring/flooring_list.html'
-    context_object_name = 'floorings' # Змінна 'floorings' передається у шаблон
+    context_object_name = 'floorings'
 
-
+# Представление для деталей полов
 class FlooringDetailView(DetailView):
     model = Flooring
     template_name = 'shop/flooring/flooring_detail.html'
     context_object_name = 'flooring'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = OrderForm()  # Використовуємо OrderForm для замовлення
-        return context
+# Представление для успешного заказа
+class OrderSuccessView(TemplateView):
+    template_name = 'shop/order_success.html'
+# Общая функция для создания заказа
+@login_required(login_url='users:login')
+def create_order(request, product, form, product_type):
+    if form.is_valid():
+        customer_name = form.cleaned_data['customer_name']
+        address = form.cleaned_data['address']
+        quantity = form.cleaned_data['quantity']
+        total_price = product.price * quantity
 
+        if product.current_stock >= quantity:
+            # Создаем заказ с указанием текущего пользователя
+            order = Order.objects.create(
+                user=request.user,
+                total_amount=total_price,
 
-def home_view(request):
-    user_form = UserForm()
-    context = {
-        'user_form': user_form,
-    }
-    return render(request, 'shop/home.html')
+            )
 
+            # Создаем OrderItem для этого заказа
+            product_instance = Product.objects.get(pk=product.pk)
+            OrderItem.objects.create(
+                order=order,
+                product=product_instance,
+                quantity=quantity,
+                subtotal=total_price
+            )
 
-# class UserLoginView(LoginView):
-#     template_name = 'shop/registration/login.html'  # Шаблон для сторінки входу
-#     success_url = reverse_lazy('shop:home')  # URL, куди перенаправити користувача після успішного входу
-#
-# class UserRegisterView(CreateView):
-#     template_name = 'shop/registration/register.html'  # Шаблон для сторінки реєстрації
-#     form_class = UserCreationForm  # Використовуємо стандартну форму для реєстрації користувача
-#     success_url = reverse_lazy('shop:home')  # URL, куди перенаправити користувача після успішної реєстрації
+            # Уменьшаем остатки товаров
+            product.current_stock -= quantity
+            product.save()
 
-# -----------------------------------------------------------------------------------------------
-# Використовуємо декоратор для забезпечення доступу лише зареєстрованим користувачам
-
-def create_order(request, pk):
-    # Отримати об'єкт меблів за переданим pk або показати 404 сторінку, якщо меблі не знайдені
-    furniture = get_object_or_404(Furniture, pk=pk)
-
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user_form = form.save(commit=False)
-            user_form.save()
-
-            customer_name = user_form.first_name
-            email = user_form.email
-            address = user_form.address
-            quantity = form.cleaned_data['quantity']
-            total_price = furniture.price * quantity
-
-            # Перевіряємо, чи достатньо товару на складі
-            if furniture.current_stock >= quantity:
-                order = Order.objects.create(
-                    customer_name=customer_name,
-                    email=email,
-                    address=address,
-                    total_price=total_price
-                )
-                OrderItem.objects.create(
-                    order=order,
-                    product=furniture,
-                    quantity=quantity
-                )
-
-                # Зменшуємо кількість товару на складі відповідно до кількості замовленого
-                furniture.current_stock -= quantity
-                furniture.save()
-
-                # Перенаправляємо користувача на сторінку успішного замовлення
-                return render(request, 'shop/order_success.html')
-            else:
-                # Якщо товару не вистачає на складі, показуємо повідомлення про помилку
-                error_message = "На жаль, недостатньо товару на складі."
-                return render(request, 'shop/order.html',
-                              {'form': form, 'product': furniture, 'error_message': error_message})
+            return render(request, 'shop/order_success.html', {'product_type': product_type})
+        else:
+            error_message = "На жаль, недостатньо товару на складі."
+            return render(request, 'shop/order.html',
+                          {'form': form, 'product': product, 'product_type': product_type, 'error_message': error_message})
     else:
-        form = UserForm()
+        messages.error(request, "Invalid form data")
+        return render(request, 'shop/order.html', {'form': form, 'product': product, 'product_type': product_type})
 
-    # Перенаправляємо неаутентифікованих користувачів на сторінку реєстрації
-    if not request.user.is_authenticated:
-        return redirect('users:register')
+# Представление для оформления заказа
+@login_required(login_url='users:register')
+def order_view(request, pk, product_type):
+    # Выводим значение pk в консоль для отладки
+    logger = logging.getLogger(__name__)
+    logger.debug("Received pk value: %s", pk)
+    if product_type == 'furniture':
+        product_model = Furniture
+    elif product_type == 'flooring':
+        product_model = Flooring
+    else:
+        return redirect('shop:home')
 
-    return render(request, 'shop/order.html', {'form': form, 'product': furniture})
-
-
-def order_view_furniture(request, pk):
-    furniture = get_object_or_404(Furniture, pk=pk)
+    product = get_object_or_404(product_model, pk=pk)
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
-
         if form.is_valid():
-            customer_name = form.cleaned_data['customer_name']
-            email = form.cleaned_data['email']
-            address = form.cleaned_data['address']
-            quantity = form.cleaned_data['quantity']
-            total_price = furniture.price * quantity
-
-            # Проверяем, достаточно ли товара на складе
-            if furniture.current_stock >= quantity:
-                order = Order.objects.create(
-                    customer_name=customer_name,
-                    email=email,
-                    address=address,
-                    total_price=total_price
-                )
-                OrderItem.objects.create(
-                    order=order,
-                    product=furniture,
-                    quantity=quantity
-                )
-                # Уменьшаем количество товара на складе в соответствии с заказом
-                furniture.current_stock -= quantity
-                furniture.save()
-                # Перенаправляем пользователя на страницу успешного заказа
-                return render(request, 'shop/order_success.html')
-            else:
-                # Если товара не хватает на складе, показываем сообщение об ошибке
-                error_message = "На жаль, недостатньо товару на складі."
-                return render(request, 'shop/order.html',
-                              {'form': form, 'product': furniture, 'error_message': error_message})
+            return create_order(request, product, form, product_type=product_type)
     else:
         form = OrderForm()
 
-    # Перенаправляем неаутентифицированных пользователей на страницу регистрации
-    if not request.user.is_authenticated:
-        return redirect('users:register')
+    return render(request, 'shop/order.html', {'form': form, 'product': product, 'product_type': product_type})
 
-    return render(request, 'shop/order.html', {'form': form, 'product': furniture})
+# Представление для подтверждения успешного заказа
+# def order_success(request):
+#     return render(request, 'shop/order_success.html')
 
-# ----------------------------------------------------------------------------------------------
+# ... (остальные представления)
 
-# Подтверждение успешного заказа
-def order_success(request):
-    return render(request, 'shop/order_success.html')
+# Классы FormView для оформления заказа мебели
+class FurnitureOrderFormView(FormView):
+    form_class = OrderForm
+    template_name = 'shop/order.html'
+
+    def form_valid(self, form):
+        furniture = get_object_or_404(Furniture, pk=self.kwargs['pk'])
+        return create_order(self.request, furniture, form, product_type='furniture')
+
+# Классы FormView для оформления заказа полов
+class FlooringOrderFormView(FormView):
+    form_class = OrderForm
+    template_name = 'shop/order.html'
+
+    def form_valid(self, form):
+        try:
+            flooring = Flooring.objects.get(pk=self.kwargs['pk'])
+            return create_order(self.request, flooring, form, product_type='flooring')
+        except Flooring.DoesNotExist:
+            return redirect('shop:flooring_list')
+
+# ... (остальные представления)

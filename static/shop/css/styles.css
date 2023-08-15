@@ -14,11 +14,29 @@ h1.header-title {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 40vh;
     background-image: var(--slide-image);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+.order-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.register-button {
+    background-color: #ffc107;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
 }
 
 .links-above-image {
@@ -109,6 +127,15 @@ h1.header-title {
     border-radius: 5px;
     cursor: pointer;
 }
+
+.registr-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 /* ... остальные стили ... */
 
 .furniture-items {
@@ -129,7 +156,7 @@ h1.header-title {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 200px;
+    max-width: 400px;
 }
 
 .product-image {
@@ -142,3 +169,4 @@ h1.header-title {
     text-align: center;
     margin: 5px;
 }
+

@@ -1,0 +1,36 @@
+/* Стилі для банера меблів */
+.furniture-header {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    background-color: lightgray; /* Додайте колір фону, що створить полоску під банером */
+}
+
+.furniture-banner-image {
+    width: 100%;
+    height: auto;
+}
+
+/* Стилі для зображень меблів та опису */
+.furniture-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.furniture-item {
+    margin: 10px;
+}
+
+.furniture-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.furniture-item p {
+    font-size: 18px;
+    color: blue;
+    margin-top: 10px;
+}

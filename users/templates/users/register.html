@@ -1,3 +1,5 @@
+<!-- users\register.html -->
+
 {% extends 'shop/base.html' %}
 
 {% block content %}
@@ -7,6 +9,7 @@
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Register">
+    <a href="{% url 'social:begin' 'github' %}">Register with GitHub</a>
 </form>
     <a href="{% url 'users:login' %}">Login</a>
 </div>
