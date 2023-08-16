@@ -101,11 +101,6 @@ def order_view(request, pk, product_type):
 
     return render(request, 'shop/order.html', {'form': form, 'product': product, 'product_type': product_type})
 
-# Представление для подтверждения успешного заказа
-# def order_success(request):
-#     return render(request, 'shop/order_success.html')
-
-# ... (остальные представления)
 
 # Классы FormView для оформления заказа мебели
 class FurnitureOrderFormView(FormView):
@@ -128,4 +123,3 @@ class FlooringOrderFormView(FormView):
         except Flooring.DoesNotExist:
             return redirect('shop:flooring_list')
 
-# ... (остальные представления)
