@@ -1,0 +1,36 @@
+/* Стилі для банера підлог */
+.flooring-header {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    background-color: lightgray; /* Додайте колір фону, що створить полоску під банером */
+}
+
+.flooring-banner-image {
+    width: 100%;
+    height: auto;
+}
+
+/* Стилі для зображень підлог та опису */
+.flooring-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.flooring-item {
+    margin: 10px;
+}
+
+.flooring-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.flooring-item p {
+    font-size: 18px;
+    color: blue;
+    margin-top: 10px;
+}

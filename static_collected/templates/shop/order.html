@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Замовити продукт</title>
+</head>
+<body>
+    {% extends 'shop/base.html' %}
+
+    {% block content %}
+        <h1>Замовити продукт</h1>
+        <form action="{% url 'shop:order_furniture' pk=product.pk %}" method="post">
+            {% csrf_token %}
+            <label for="customer_name">Ім'я:</label>
+            <input type="text" name="customer_name" id="customer_name" required><br><br>
+            <label for="address">Адреса:</label>
+            <input type="text" name="address" id="address" required><br><br>
+            <label for="quantity">Кількість:</label>
+            <input type="number" name="quantity" id="quantity" min="1" required><br><br>
+            <input type="submit" value="Замовити">
+        </form>
+    {% endblock %}
+</body>
+</html>

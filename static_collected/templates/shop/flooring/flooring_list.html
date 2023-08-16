@@ -1,0 +1,28 @@
+<!-- shop/flooring/flooring_list.html  -->
+
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'shop/flooring/css/flooring_styles.css' %}">
+
+    <!-- Банер підлог -->
+    <div class="flooring-header">
+        <img class="flooring-banner-image" src="{% static 'shop/images/flooring/flooring-banner.jpg' %}" alt="Flooring">
+    </div>
+
+    <!-- Зображення підлог з названням та посиланням на сторінку деталей -->
+    <div class="flooring-items">
+        {% for flooring in floorings %}
+            <a class="product-link" href="{% if user.is_authenticated %}{% url 'shop:order' pk=flooring.pk %}{% else %}{% url 'users:register' %}{% endif %}">
+                <div class="flooring-item">
+                    <img class="product-image" src="{% static 'shop/images/flooring/flooring_' %}{{ flooring.pk }}.jpg" alt="{{ flooring.name }}">
+                    <p class="product-name">{{ flooring.name }}</p>
+                    <p class="product-dimensions">Dimensions: {{ flooring.dimensions }}</p>
+                    <p class="product-price">Price: {{ flooring.price }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
+

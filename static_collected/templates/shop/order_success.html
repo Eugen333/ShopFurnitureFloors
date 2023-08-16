@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Order Success</title>
+</head>
+<body>
+    {% extends 'shop/base.html' %}
+
+    {% block content %}
+        <h1>Замовлення успішно оформлено!</h1>
+        <p>Дякуємо за ваше замовлення. Ми зв'яжемося з вами найближчим часом.</p>
+        <a href="{% url 'shop:home' %}">На головну сторінку</a>
+    {% endblock %}
+</body>
+</html>

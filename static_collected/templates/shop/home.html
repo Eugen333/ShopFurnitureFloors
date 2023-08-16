@@ -1,0 +1,38 @@
+<!-- ShopFurnitureFloors\shop\templates\shop\home.html -->
+
+{% extends 'shop/base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <style>
+        :root {
+            --slide-image: url("{% static 'shop/images/slide_1_1600.jpg' %}");
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+    <div class="center-content">
+        <!-- Тут не має тексту на фоновій картинці -->
+    </div>
+    <div class="text-below-image">
+        <h2>Інтернет Магазин Меблі та Підлога</h2>
+        <p>Знайдіть найкращі меблі та підлогу для свого дому!</p>
+    </div>
+
+    <div class="user-actions">
+        <a href="{% url 'users:login' %}">
+            <button class="login-button">Увійти</button>
+        </a><br>
+        <a>або</a><br>
+        <a href="{% url 'users:register' %}">
+            <button class="register-button">Зареєструватися</button>
+        </a>
+    </div>
+
+    <!-- Добавляем кнопку для регистрации через GitHub -->
+    <div class="github-registration">
+        <a href="{% url 'social:begin' 'github' %}">
+            <img src="{% static 'shop/images/Githab.jpg' %}" alt="Register with GitHub">
+        </a>
+    </div>
+{% endblock %}

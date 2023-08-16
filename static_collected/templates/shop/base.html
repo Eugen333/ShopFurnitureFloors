@@ -1,0 +1,43 @@
+<!-- shop\base.html -->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}FurnitureFloorsShop{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">Інтернет Магазин Меблі та Підлога</h1>
+        </div>
+        <div class="links-above-image">
+            <a href="{% url 'shop:home' %}" class="round-link">
+                <img src="{% static 'shop/images/home-icon.png' %}" alt="Home" class="round-image">
+                Home
+            </a>
+            <a href="{% url 'shop:furniture' %}" class="round-link">
+                <img src="{% static 'shop/images/furniture-icon.png' %}" alt="Меблі" class="round-image">
+                Меблі
+            </a>
+            <a href="{% url 'shop:flooring_list' %}" class="round-link">
+                <img src="{% static 'shop/images/flooring-icon.png' %}" alt="Підлога" class="round-image">
+                Підлога
+            </a>
+        </div>
+    </header>
+    <main class="main">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="footer">
+        <p>&copy; FurnitureFloorsShop {% now "Y" %}</p>
+    </footer>
+
+
+</body>
+</html>

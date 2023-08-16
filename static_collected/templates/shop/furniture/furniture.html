@@ -1,0 +1,27 @@
+<!-- shop/furniture.html -->
+
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'shop/furniture/css/furniture_styles.css' %}">
+
+    <!-- Банер меблів -->
+    <div class="furniture-header">
+        <img class="furniture-banner-image" src="{% static '/shop/images/furniture/furniture-banner.jpg' %}" alt="Furniture">
+    </div>
+
+    <!-- Зображення меблів з названням та посиланням на сторінку заказу -->
+    <div class="furniture-items">
+        {% for product in furniture %}
+            <a class="product-link" href="{% url 'shop:order_furniture' pk=product.pk %}">
+                <div class="furniture-item">
+                    <img class="product-image" src="{% static 'shop/images/furniture/furniture_' %}{{ product.pk }}.jpg" alt="{{ product.name }}">
+                    <p class="product-name">{{ product.name }}</p>
+                    <p class="product-dimensions">Dimensions: {{ product.dimensions }}</p>
+                    <p class="product-price">Price: {{ product.price }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
